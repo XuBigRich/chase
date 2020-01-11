@@ -1,0 +1,23 @@
+server:
+  port: 8887
+
+spring:
+  mail:
+    host: smtp.qq.com
+    username: 847118663@qq.com
+    password: ulhsgvgqsyiibeje
+    protocol: smtp
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.port: 465
+    properties.mail.display.sendmail: DoubleFJ
+    properties.mail.display.sendname: Spring Boot Email
+    properties.mail.smtp.starttls.enable: true
+    properties.mail.smtp.starttls.required: true
+    properties.mail.smtp.ssl.enable: true
+    default-encoding: utf-8
+    from: 847118663@qq.com
+  thymeleaf:
+    prefix: classpath:/templates/
+
+  mvc:
+    static-path-pattern: /static/**

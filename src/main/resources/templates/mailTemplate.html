@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>spring-boot-mail test</title>
+    <style>
+        body {
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #welcome {
+            text-align: center;
+            color:#F00;
+        }
+    </style>
+</head>
+<body >
+    <div id="welcome" style="position:fixed;left:0px; top:0px; width:100%; height:100%;z-index:999">
+        <!--<h3> Good Morning Elfin！</h3>-->
+        <h3> Good Morning ！</h3>
+
+
+        今日天气：<span th:text="${weather}"></span>
+        <br/>
+        穿衣提示：<span th:text="${dress}"></span>
+        <!--<a href="#" th:href="@{${github_url}}" target="_bank">-->
+        <br/>
+        开心一天：<span th:text="${joke}"></span>
+        <br/>
+        <br/>
+        小秘密:<span th:text="${DES}"></span>
+        <a href="/cipher/cipher">破解小秘密</a>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        Send to SUNSHINE
+    </div>
+
+</body>
+</html>

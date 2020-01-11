@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>解读小秘密</title>
+</head>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script type="text/javascript"  src="../static/tripledes.js"></script>
+<script type="text/javascript"  src="../static/mode-ecb.js"></script>
+<script >
+  //解密
+  function decrypt() {
+      var aseKey = document.getElementById("cipher").value;   //秘钥必须为：8/16/32位
+      var encrypt = document.getElementById("secret").value;
+    /* $.get("/cipher/decode", { aseKey: aseKey, encrypt: encrypt },
+          function(data){
+              alert("Data Loaded: " + data);
+          });*/
+     /* $.get("/cipher/des", { aseKey: aseKey, encrypt: encrypt },
+          function(data){
+              alert("Data Loaded: " + data);
+          });*/
+          var keyHex = CryptoJS.enc.Utf8.parse(aseKey);
+          var encrypted = CryptoJS.DES.encrypt(encrypt, keyHex, {
+              mode: CryptoJS.mode.ECB,
+              padding: CryptoJS.pad.Pkcs7
+          });
+          return encrypted.ciphertext.toString();
+  }
+</script>
+<body >
+   小秘密<input id="secret" type="text">
+   暗号<input id="cipher" type="text">
+   <input type="submit" onclick="decrypt()">
+</body>
+</html>
