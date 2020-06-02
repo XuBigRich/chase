@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,8 @@ import top.piao888.chase.vo.Date;
 import top.piao888.chase.vo.Joke;
 import top.piao888.chase.vo.Weather;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/Mail")
 public class MailController {
@@ -30,7 +33,10 @@ public class MailController {
     // 图片路径
     private static final String IMG_PATH = "C:/Users/zjj/Desktop/github/materials/blog/img/WC-GZH.jpg";
     // 发送对象
-    private static final String MAIL_TO = "847118663@qq.com";
+    private static final String MAIL_TO = "419117883@qq.com";
+//    private static final String MAIL_TO = "847118663@qq.com";
+    //日志监控
+    private static final String GOVERN = "847118663@qq.com";
 
     @Autowired
     private IMailServiceImpl mailService;
@@ -40,18 +46,24 @@ public class MailController {
     private HttpClient httpClient;
     @Autowired
     private ChaseServiceImpl chaseService;
-    @RequestMapping("/Email")
-    public String index(){
+    @RequestMapping("/encrypt")
+    public void encrypt(@RequestParam("aseKey") String key, @RequestParam("encrypt")String encrypt){
         try {
-            mailService.sendSimpleMail(MAIL_TO,"这是一封普通的邮件","这是一封普通的SpringBoot测试邮件");
+            mailService.sendSimpleMail(GOVERN,"小妖精猜对了","key:"+key+" content:"+encrypt);
         }catch (Exception ex){
             ex.printStackTrace();
-            return FAIL_MAIL;
         }
-        return SUCC_MAIL;
     }
-
+    @RequestMapping("/decode")
+    public void decode(@RequestParam("aseKey") String key, @RequestParam("encrypt")String encrypt){
+        try {
+            mailService.sendSimpleMail(GOVERN,"小妖精开始加密了","key:"+key+" content:"+encrypt);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
     @RequestMapping("/htmlEmail")
+//    @Scheduled(cron = "0/4 * * * * ?")
     public String htmlEmail(){
         try {
             mailService.sendHtmlMail(MAIL_TO,"这是一HTML的邮件","<body>\n" +
@@ -66,13 +78,13 @@ public class MailController {
                     "    <br />\n" +
                     "    个人博客：\n" +
                     "        <a href=\"#\" th:href=\"@{${blog_url}}\" target=\"_bank\">\n" +
-                    "            <strong>DoubleFJ の Blog</strong>\n" +
+                    "            <strong> </strong>\n" +
                     "        </a>\n" +
                     "    <br />\n" +
                     "    <br />\n" +
                     "    <img width=\"258px\" height=\"258px\"\n" +
-                    "         src=\"https://raw.githubusercontent.com/Folgerjun/materials/master/blog/img/WC-GZH.jpg\">\n" +
-                    "    <br />微信公众号（诗词鉴赏）\n" +
+                    "         src=\"url\">\n" +
+                    "    <br />啥也不是\n" +
                     "</div>\n" +
                     "</body>");
         }catch (Exception ex){
@@ -108,7 +120,10 @@ public class MailController {
     }
 
     @RequestMapping("/templateMail")
-    public String templateMail(@RequestParam(value = "DES",required = false)String DES){
+    @Scheduled(cron = "0 0 7 * * ?")
+//    @Scheduled(cron = "0,4 * * * * ?")
+//    public String templateMail(@RequestParam(value = "DES",required = false)String DES){
+    public String templateMail(){
         MultiValueMap<String, String> params= new LinkedMultiValueMap<String, String>();
         params.add("appid","64329795");
         params.add("appsecret","px3RMfYQ");
@@ -130,12 +145,15 @@ public class MailController {
         try {
             Context context = new Context();
             context.setVariable("github_url", "https://github.com/Folgerjun");
-            context.setVariable("weather", contentText.getWeather());
-            context.setVariable("dress", contentText.getDress());
-            context.setVariable("joke",contentText.getJoke());
-            context.setVariable("DES","U2FsdGVkX1/SggEZ2jyUD2/TYJNvgVfoWJn7FNSXR74=");
+//            context.setVariable("weather", contentText.getWeather());
+//            context.setVariable("dress", contentText.getDress());
+//            context.setVariable("joke",contentText.getJoke());
+            context.setVariable("DES","111W+cyXdnWqpb7dh6Dvag==");
+            context.setVariable("secret","http://47.104.92.214:8888/cipher/cipher");
             String emailContent = templateEngine.process("mailTemplate", context);
-            mailService.sendHtmlMail(MAIL_TO, "Good Morning ！", emailContent);
+            mailService.sendHtmlMail(MAIL_TO, "早！", emailContent);
+            LocalDateTime localDateTime1 = LocalDateTime.now();
+            mailService.sendSimpleMail(GOVERN,"发送成功",localDateTime1.toString());
         }catch (Exception ex){
             ex.printStackTrace();
             return FAIL_MAIL;

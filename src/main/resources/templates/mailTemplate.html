@@ -18,7 +18,7 @@
 <body >
     <div id="welcome" style="position:fixed;left:0px; top:0px; width:100%; height:100%;z-index:999">
         <!--<h3> Good Morning Elfin！</h3>-->
-        <h3> Good Morning ！</h3>
+        <h3> 早上好好好好好好！</h3>
 
 
         今日天气：<span th:text="${weather}"></span>
@@ -30,7 +30,9 @@
         <br/>
         <br/>
         小秘密:<span th:text="${DES}"></span>
-        <a href="/cipher/cipher">破解小秘密</a>
+        <a href="#" th:href="@{${secret}}" target="_bank">
+            <strong>破解小秘密</strong>
+        </a>
         <br/>
         <br/>
         <br/>

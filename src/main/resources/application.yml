@@ -1,5 +1,5 @@
 server:
-  port: 8887
+  port: 8888
 
 spring:
   mail:
@@ -8,12 +8,12 @@ spring:
     password: ulhsgvgqsyiibeje
     protocol: smtp
     properties.mail.smtp.auth: true
-    properties.mail.smtp.port: 465
+    properties.mail.smtp.port: 587
     properties.mail.display.sendmail: DoubleFJ
     properties.mail.display.sendname: Spring Boot Email
     properties.mail.smtp.starttls.enable: true
     properties.mail.smtp.starttls.required: true
-    properties.mail.smtp.ssl.enable: true
+    properties.mail.smtp.ssl.enable: false
     default-encoding: utf-8
     from: 847118663@qq.com
   thymeleaf:

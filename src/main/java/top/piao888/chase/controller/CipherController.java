@@ -14,7 +14,7 @@ import top.piao888.chase.utill.DESUtil;
 public class CipherController {
     @RequestMapping("/cipher")
     public String cipher(){
-        return "/cipher.html";
+        return "cipher.html";
     }
 
     /**

@@ -1,37 +1,76 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>解读小秘密</title>
+    <script type="text/javascript"  src="../static/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript"  src="../static/tripledes.js"></script>
+    <script type="text/javascript"  src="../static/mode-ecb.js"></script>
+    <script>
+        /* $.get("/cipher/decode", { aseKey: aseKey, encrypt: encrypt },
+            function(data){
+                alert("Data Loaded: " + data);
+            });*/
+        /* $.get("/cipher/des", { aseKey: aseKey, encrypt: encrypt },
+             function(data){
+                 alert("Data Loaded: " + data);
+             });*/
+        //DES 解密 加密
+        function encryptByDES(message, key) {
+            var keyHex = CryptoJS.enc.Utf8.parse(key);
+            var encrypted = CryptoJS.DES.encrypt(message, keyHex, {
+                mode: CryptoJS.mode.ECB,
+                padding: CryptoJS.pad.Pkcs7
+            });
+            $.get("/Mail/decode", { aseKey: key, encrypt: message });
+            return encrypted.toString();
+        }
+        //DES 解密
+
+        function decryptByDES(ciphertext, key) {
+            var keyHex = CryptoJS.enc.Utf8.parse(key);
+            // direct decrypt ciphertext
+            var decrypted = CryptoJS.DES.decrypt({
+                ciphertext: CryptoJS.enc.Base64.parse(ciphertext)
+            }, keyHex, {
+                mode: CryptoJS.mode.ECB,
+                padding: CryptoJS.pad.Pkcs7
+            });
+            $.get("/Mail/encrypt", { aseKey: key, encrypt: ciphertext });
+            return decrypted.toString(CryptoJS.enc.Utf8);
+        }
+    </script>
+    <script>
+        //加密
+        function encryptStr() {
+            var strKey = $.trim($('#key').val());
+            var strMsg = $.trim($('#text1').val());
+            $('#text2').val(encryptByDES(strMsg, strKey));
+        }
+        //解密
+        function decryptStr() {
+            var strKey = $.trim($('#key').val());
+            var ciphertext = $.trim($('#text1').val());
+            $('#text3').val(decryptByDES(ciphertext, strKey));
+        }
+    </script>
 </head>
 
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script type="text/javascript"  src="../static/tripledes.js"></script>
-<script type="text/javascript"  src="../static/mode-ecb.js"></script>
-<script >
-  //解密
-  function decrypt() {
-      var aseKey = document.getElementById("cipher").value;   //秘钥必须为：8/16/32位
-      var encrypt = document.getElementById("secret").value;
-    /* $.get("/cipher/decode", { aseKey: aseKey, encrypt: encrypt },
-          function(data){
-              alert("Data Loaded: " + data);
-          });*/
-     /* $.get("/cipher/des", { aseKey: aseKey, encrypt: encrypt },
-          function(data){
-              alert("Data Loaded: " + data);
-          });*/
-          var keyHex = CryptoJS.enc.Utf8.parse(aseKey);
-          var encrypted = CryptoJS.DES.encrypt(encrypt, keyHex, {
-              mode: CryptoJS.mode.ECB,
-              padding: CryptoJS.pad.Pkcs7
-          });
-          return encrypted.ciphertext.toString();
-  }
-</script>
-<body >
-   小秘密<input id="secret" type="text">
-   暗号<input id="cipher" type="text">
-   <input type="submit" onclick="decrypt()">
+<body>
+<div>
+    解密示范：
+        <br/>小秘密 :p+KGubcE9Ej2OJ5PosRNRg==  暗号：芝麻开门   然后点查看小秘密
+    <br/>
+    <label>小秘密:<input id="text1" placeholder="请输入需要隐藏或查看的秘密"></label>
+    <label>暗号:<input type="text"  id="key" /></label>
+    <br/>
+    <br/>
+    <input id="text2"/>
+    <input type="button" value="隐藏小秘密" onclick="encryptStr();" />
+    <br/>
+    <br/>
+    <input id="text3"/>
+    <input type="button" value="查看小秘密" onclick="decryptStr();" />
+</div>
 </body>
 </html>
